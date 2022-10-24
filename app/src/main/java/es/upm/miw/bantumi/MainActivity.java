@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Locale;
 
 import es.upm.miw.bantumi.model.BantumiViewModel;
@@ -120,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 new FinalAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
                 return true;
             case R.id.opcGuardarPartida:
+                guardarPartida();
                 return true;
             case R.id.opcRecuperarPartida:
                 return true;
@@ -146,6 +150,28 @@ public class MainActivity extends AppCompatActivity {
                 ).show();
         }
         return true;
+    }
+
+    private void guardarPartida() {
+       String bantumiSerialized = this.juegoBantumi.serializa();
+        FileOutputStream fos = null;
+
+        try {
+            fos = openFileOutput("BantumiGame", MODE_PRIVATE);
+            fos.write(bantumiSerialized.getBytes());
+
+            Toast.makeText(this, "Saved ", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**

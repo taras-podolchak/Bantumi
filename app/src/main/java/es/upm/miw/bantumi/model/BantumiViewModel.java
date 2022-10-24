@@ -1,11 +1,16 @@
 package es.upm.miw.bantumi.model;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import es.upm.miw.bantumi.JuegoBantumi;
 
@@ -32,6 +37,7 @@ public class BantumiViewModel extends ViewModel {
 
     /**
      * Establece el valor para turno
+     *
      * @param turno valor
      */
     public void setTurno(JuegoBantumi.Turno turno) {
@@ -57,12 +63,20 @@ public class BantumiViewModel extends ViewModel {
      * Asigna el valor v a la posición pos del tablero
      *
      * @param pos índice
-     * @param v valor
+     * @param v   valor
      */
     public void setNumSemillas(int pos, int v) {
         if (pos < 0 || pos >= JuegoBantumi.NUM_POSICIONES) {
             throw new ArrayIndexOutOfBoundsException();
         }
         tablero.get(pos).setValue(v);
+    }
+
+    @SuppressLint("NewApi")
+    public String datosDeTablero() {
+        return tablero.stream()
+               .map(MutableLiveData::getValue)
+                .map(Object::toString)
+                .collect(Collectors.joining(","));
     }
 }

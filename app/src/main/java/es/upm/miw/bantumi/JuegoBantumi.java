@@ -192,8 +192,7 @@ public class JuegoBantumi {
      * @return juego serializado
      */
     public String serializa() {
-        // @TODO
-        return null;
+        return bantumiVM.getTurno().getValue() + ";" + bantumiVM.datosDeTablero();
     }
 
     /**
