@@ -77,6 +77,6 @@ public class BantumiViewModel extends ViewModel {
         return tablero.stream()
                .map(MutableLiveData::getValue)
                 .map(Object::toString)
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(","))+",";
     }
 }

@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,8 +15,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Locale;
 
 import es.upm.miw.bantumi.model.BantumiViewModel;
@@ -126,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 guardarPartida();
                 return true;
             case R.id.opcRecuperarPartida:
+                recuperarPartida();
                 return true;
             case R.id.opcMejoresResultados:
                 return true;
@@ -152,28 +154,41 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
     private void guardarPartida() {
-       String bantumiSerialized = this.juegoBantumi.serializa();
-        FileOutputStream fos = null;
-
         try {
-            fos = openFileOutput("BantumiGame", MODE_PRIVATE);
-            fos.write(bantumiSerialized.getBytes());
-
-            Toast.makeText(this, "Saved ", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            FileOutputStream fileOutputStream = openFileOutput("BantumiGame", MODE_PRIVATE);
+            fileOutputStream.write(juegoBantumi.serializa().getBytes());
+            fileOutputStream.close();
+            Snackbar.make(getWindow().getDecorView().getRootView(), "Partida guardada con exito ", Snackbar.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.i(LOG_TAG, e.toString());
         }
     }
 
+    private void recuperarPartida() {
+        try {
+            FileInputStream fileInputStream = openFileInput("BantumiGame");
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
+            StringBuilder stringBuilder = new StringBuilder();
+            String cadenaRecuperada;
+            while ((cadenaRecuperada = bufferedReader.readLine()) != null) {
+                stringBuilder.append(cadenaRecuperada).append("\n");
+            }
+            String fileData = stringBuilder.toString();
+            fileInputStream.close();
+
+            if (!fileData.equals("")) {
+                Snackbar.make(getWindow().getDecorView().getRootView(), "Recuperando la partida...", Snackbar.LENGTH_SHORT).show();
+                juegoBantumi.deserializa(fileData);
+            } else {
+                Snackbar.make(getWindow().getDecorView().getRootView(), "No se encuentra la partida guardada", Snackbar.LENGTH_LONG).show();
+            }
+
+        } catch (Exception e) {
+            Log.i(LOG_TAG, e.toString());
+        }
+    }
     /**
      * Acción que se ejecuta al pulsar sobre un hueco
      *

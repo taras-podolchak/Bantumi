@@ -1,6 +1,10 @@
 package es.upm.miw.bantumi;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
+
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import es.upm.miw.bantumi.model.BantumiViewModel;
 
@@ -192,7 +196,7 @@ public class JuegoBantumi {
      * @return juego serializado
      */
     public String serializa() {
-        return bantumiVM.getTurno().getValue() + ";" + bantumiVM.datosDeTablero();
+        return bantumiVM.getTurno().getValue().ordinal() + ";" + bantumiVM.datosDeTablero();
     }
 
     /**
@@ -200,7 +204,26 @@ public class JuegoBantumi {
      *
      * @param juegoSerializado cadena que representa el estado completo del juego
      */
+    @SuppressLint("NewApi")
     public void deserializa(String juegoSerializado) {
-        // @TODO
+        deserializacionDeTurno(Integer.parseInt(juegoSerializado.substring(0, 1)));
+        deserializacionDeTablero(juegoSerializado.substring(2));
+    }
+
+    @SuppressLint("NewApi")
+    private void deserializacionDeTurno(int parseInt) {
+        bantumiVM.setTurno(Arrays.stream(Turno.values())
+                .filter((Turno t) -> t.ordinal() == parseInt)
+                .findFirst()
+                .get());
+    }
+
+    @SuppressLint("NewApi")
+    private void deserializacionDeTablero(String substring) {
+        AtomicInteger position = new AtomicInteger();
+        Arrays.stream(substring.split(","))
+                .filter(data -> !data.equals("\n"))
+                .forEach(d -> bantumiVM.setNumSemillas(
+                        position.getAndIncrement(), Integer.parseInt(d)));
     }
 }
