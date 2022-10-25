@@ -1,5 +1,6 @@
 package es.upm.miw.bantumi;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,8 +23,11 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+import es.upm.miw.bantumi.model.BantumiEntity;
 import es.upm.miw.bantumi.model.BantumiViewModel;
 import es.upm.miw.bantumi.preferencias.AjustesActivity;
 
@@ -31,11 +35,14 @@ public class MainActivity extends AppCompatActivity {
 
     protected final String LOG_TAG = "MiW";
     JuegoBantumi juegoBantumi;
-    BantumiViewModel bantumiVM;
+    private BantumiViewModel bantumiVM;
     int numInicialSemillas;
     private SharedPreferences preferencias;
-    TextView tvJugador1;
-    TextView tvJugador2;
+    private TextView tvJugador1;
+    private TextView tvJugador2;
+    private TextView almacenJugador1;
+    private TextView almacenJugador2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +55,10 @@ public class MainActivity extends AppCompatActivity {
         juegoBantumi = new JuegoBantumi(bantumiVM, JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
         crearObservadores();
 
-         tvJugador1 = findViewById(R.id.tvPlayer1);
-         tvJugador2 = findViewById(R.id.tvPlayer2);
+        tvJugador1 = findViewById(R.id.tvPlayer1);
+        tvJugador2 = findViewById(R.id.tvPlayer2);
+        almacenJugador1 = findViewById(R.id.casilla_06);
+        almacenJugador2 = findViewById(R.id.casilla_13);
     }
 
     @Override
@@ -257,13 +266,30 @@ public class MainActivity extends AppCompatActivity {
 
         // @TODO guardar puntuación
         new FinalAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
-    }
-    private void recuperarNombres() {
-        tvJugador1.setText(obtenerNombresDelJugador(R.string.key_jugador01,R.string.default_value_Nombre01));
-        tvJugador2.setText(obtenerNombresDelJugador(R.string.key_jugador02,R.string.default_value_Nombre02));
+        guardarPuntuacion();
     }
 
-    private String obtenerNombresDelJugador(int key, int default_value) {
-        return preferencias.getString(getString(key),getString(default_value));
+    private void recuperarNombres() {
+        tvJugador1.setText(obtenerNombreDelJugador(R.string.key_jugador01, R.string.default_value_Nombre01));
+        tvJugador2.setText(obtenerNombreDelJugador(R.string.key_jugador02, R.string.default_value_Nombre02));
+    }
+
+    private String obtenerNombreDelJugador(int key, int default_value) {
+        return preferencias.getString(getString(key), getString(default_value));
+    }
+
+    @SuppressLint("NewApi")
+    void guardarPuntuacion() {
+        Intent replyIntent = new Intent();
+        String nombreJugador01 = tvJugador1.getText().toString();
+        String nombreJugador02 = tvJugador2.getText().toString();
+        String almacenJugador1 = this.almacenJugador1.getText().toString();
+        String almacenJugador2 = this.almacenJugador2.getText().toString();
+        String fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+
+        BantumiEntity bantumi = new BantumiEntity(nombreJugador01, nombreJugador02, almacenJugador1, almacenJugador2, fecha);
+        bantumiVM.insert(bantumi);
+
+        setResult(RESULT_OK, replyIntent);
     }
 }

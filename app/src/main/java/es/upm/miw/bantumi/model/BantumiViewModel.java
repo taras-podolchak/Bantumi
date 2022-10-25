@@ -1,31 +1,34 @@
 package es.upm.miw.bantumi.model;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
+import android.app.Application;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import es.upm.miw.bantumi.JuegoBantumi;
 
-public class BantumiViewModel extends ViewModel {
+public class BantumiViewModel extends AndroidViewModel {
 
     private ArrayList<MutableLiveData<Integer>> tablero;
 
     private MutableLiveData<JuegoBantumi.Turno> turno;
 
-    public BantumiViewModel() {
+    private BantumiRepository bantumiRepository;
+
+    public BantumiViewModel(Application application) {
+        super(application);
         turno = new MutableLiveData<>(JuegoBantumi.Turno.turnoJ1);
         tablero = new ArrayList<>(JuegoBantumi.NUM_POSICIONES);
         for (int i = 0; i < JuegoBantumi.NUM_POSICIONES; i++) {
             tablero.add(i, new MutableLiveData<>(0));
         }
+        bantumiRepository = new BantumiRepository(application);
     }
 
     /**
@@ -78,5 +81,9 @@ public class BantumiViewModel extends ViewModel {
                .map(MutableLiveData::getValue)
                 .map(Object::toString)
                 .collect(Collectors.joining(","))+",";
+    }
+
+    public void insert(BantumiEntity bantumi) {
+        bantumiRepository.insert(bantumi);
     }
 }
