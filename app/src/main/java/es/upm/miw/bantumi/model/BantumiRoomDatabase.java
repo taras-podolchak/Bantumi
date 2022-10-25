@@ -41,7 +41,7 @@ public abstract class BantumiRoomDatabase extends RoomDatabase {
     }
 
     // Delete all content and repopulate the database whenever the app is started
-    private static RoomDatabase.Callback sRoomDatabaseCallback =
+    private static final RoomDatabase.Callback sRoomDatabaseCallback =
             new RoomDatabase.Callback() {
 
                 @Override

@@ -25,15 +25,11 @@ public class BantumiRepository {
         return ldList;
     }
 
-    public long insert(BantumiEntity bantumi) {
-        return iBantumiDAO.insert(bantumi);
+    public void insert(BantumiEntity bantumi) {
+        iBantumiDAO.insert(bantumi);
     }
 
     public void deleteAll() {
         iBantumiDAO.deleteAll();
     }
-
- /*   public void delete(BantumiEntity item) {
-        iItemDAO.delete(item);
-    }*/
 }

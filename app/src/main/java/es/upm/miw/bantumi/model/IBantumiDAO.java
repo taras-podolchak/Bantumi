@@ -19,6 +19,4 @@ public interface IBantumiDAO {
     @Query("DELETE FROM " + BantumiEntity.TABLA)
     void deleteAll();
 
- /*   @Delete
-    void delete(BantumiEntity grupo);*/
 }
