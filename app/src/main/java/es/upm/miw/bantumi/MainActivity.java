@@ -1,6 +1,8 @@
 package es.upm.miw.bantumi;
 
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -22,6 +25,7 @@ import java.io.InputStreamReader;
 import java.util.Locale;
 
 import es.upm.miw.bantumi.model.BantumiViewModel;
+import es.upm.miw.bantumi.preferencias.AjustesActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     JuegoBantumi juegoBantumi;
     BantumiViewModel bantumiVM;
     int numInicialSemillas;
+    private SharedPreferences preferencias;
+    TextView tvJugador1;
+    TextView tvJugador2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,16 @@ public class MainActivity extends AppCompatActivity {
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
         juegoBantumi = new JuegoBantumi(bantumiVM, JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
         crearObservadores();
+
+         tvJugador1 = findViewById(R.id.tvPlayer1);
+         tvJugador2 = findViewById(R.id.tvPlayer2);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        preferencias = PreferenceManager.getDefaultSharedPreferences(this);
+        recuperarNombres();
     }
 
     /**
@@ -75,8 +92,6 @@ public class MainActivity extends AppCompatActivity {
      * @param turnoActual turno actual
      */
     private void marcarTurno(@NonNull JuegoBantumi.Turno turnoActual) {
-        TextView tvJugador1 = findViewById(R.id.tvPlayer1);
-        TextView tvJugador2 = findViewById(R.id.tvPlayer2);
         switch (turnoActual) {
             case turnoJ1:
                 tvJugador1.setTextColor(getColor(R.color.white));
@@ -131,9 +146,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.opcMejoresResultados:
                 return true;
-//            case R.id.opcAjustes: // @todo Preferencias
-//                startActivity(new Intent(this, BantumiPrefs.class));
-//                return true;
+            case R.id.opcAjustes: // @todo Preferencias
+                startActivity(new Intent(this, AjustesActivity.class));
+                return true;
             case R.id.opcAcercaDe:
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.aboutTitle)
@@ -141,9 +156,6 @@ public class MainActivity extends AppCompatActivity {
                         .setPositiveButton(android.R.string.ok, null)
                         .show();
                 return true;
-
-            // @TODO!!! resto opciones
-
             default:
                 Snackbar.make(
                         findViewById(android.R.id.content),
@@ -184,11 +196,11 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Snackbar.make(getWindow().getDecorView().getRootView(), "No se encuentra la partida guardada", Snackbar.LENGTH_LONG).show();
             }
-
         } catch (Exception e) {
             Log.i(LOG_TAG, e.toString());
         }
     }
+
     /**
      * Acción que se ejecuta al pulsar sobre un hueco
      *
@@ -245,5 +257,13 @@ public class MainActivity extends AppCompatActivity {
 
         // @TODO guardar puntuación
         new FinalAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
+    }
+    private void recuperarNombres() {
+        tvJugador1.setText(obtenerNombresDelJugador(R.string.key_jugador01,R.string.default_value_Nombre01));
+        tvJugador2.setText(obtenerNombresDelJugador(R.string.key_jugador02,R.string.default_value_Nombre02));
+    }
+
+    private String obtenerNombresDelJugador(int key, int default_value) {
+        return preferencias.getString(getString(key),getString(default_value));
     }
 }
