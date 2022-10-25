@@ -15,11 +15,11 @@ import es.upm.miw.bantumi.JuegoBantumi;
 
 public class BantumiViewModel extends AndroidViewModel {
 
-    private ArrayList<MutableLiveData<Integer>> tablero;
+    private final ArrayList<MutableLiveData<Integer>> tablero;
 
-    private MutableLiveData<JuegoBantumi.Turno> turno;
+    private final MutableLiveData<JuegoBantumi.Turno> turno;
 
-    private BantumiRepository bantumiRepository;
+    private final BantumiRepository bantumiRepository;
 
     public BantumiViewModel(Application application) {
         super(application);
@@ -78,12 +78,16 @@ public class BantumiViewModel extends AndroidViewModel {
     @SuppressLint("NewApi")
     public String datosDeTablero() {
         return tablero.stream()
-               .map(MutableLiveData::getValue)
+                .map(MutableLiveData::getValue)
                 .map(Object::toString)
-                .collect(Collectors.joining(","))+",";
+                .collect(Collectors.joining(",")) + ",";
     }
 
     public void insert(BantumiEntity bantumi) {
         bantumiRepository.insert(bantumi);
+    }
+
+    public void deleteAll() {
+        bantumiRepository.deleteAll();
     }
 }

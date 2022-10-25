@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class BantumiRepository {
-    private IBantumiDAO iBantumiDAO;
-    private LiveData<List<BantumiEntity>> ldList;
+    private final IBantumiDAO iBantumiDAO;
+    private final LiveData<List<BantumiEntity>> ldList;
 
     /**
      * Constructor
@@ -29,11 +29,11 @@ public class BantumiRepository {
         return iBantumiDAO.insert(bantumi);
     }
 
- /*   public void deleteAll() {
-        iItemDAO.deleteAll();
+    public void deleteAll() {
+        iBantumiDAO.deleteAll();
     }
 
-    public void delete(BantumiEntity item)  {
+ /*   public void delete(BantumiEntity item) {
         iItemDAO.delete(item);
     }*/
 }

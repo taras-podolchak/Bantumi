@@ -3,8 +3,6 @@ package es.upm.miw.bantumi.model;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.time.LocalDateTime;
-
 @Entity(tableName = BantumiEntity.TABLA)
 public class BantumiEntity {
     static public final String TABLA = "bantumi";

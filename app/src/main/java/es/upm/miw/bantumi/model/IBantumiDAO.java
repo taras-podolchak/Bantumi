@@ -16,9 +16,9 @@ public interface IBantumiDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insert(BantumiEntity bantumi);
 
-   /* @Query("DELETE FROM " + BantumiEntity.TABLA)
+    @Query("DELETE FROM " + BantumiEntity.TABLA)
     void deleteAll();
 
-    @Delete
+ /*   @Delete
     void delete(BantumiEntity grupo);*/
 }
