@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import es.upm.miw.bantumi.JuegoBantumi;
@@ -21,6 +22,8 @@ public class BantumiViewModel extends AndroidViewModel {
 
     private final BantumiRepository bantumiRepository;
 
+    private LiveData<List<BantumiEntity>> ldList;
+
     public BantumiViewModel(Application application) {
         super(application);
         turno = new MutableLiveData<>(JuegoBantumi.Turno.turnoJ1);
@@ -29,6 +32,7 @@ public class BantumiViewModel extends AndroidViewModel {
             tablero.add(i, new MutableLiveData<>(0));
         }
         bantumiRepository = new BantumiRepository(application);
+        ldList = bantumiRepository.getAll();
     }
 
     /**
@@ -81,6 +85,9 @@ public class BantumiViewModel extends AndroidViewModel {
                 .map(MutableLiveData::getValue)
                 .map(Object::toString)
                 .collect(Collectors.joining(",")) + ",";
+    }
+    public LiveData<List<BantumiEntity>> getAll() {
+        return ldList;
     }
 
     public void insert(BantumiEntity bantumi) {

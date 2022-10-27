@@ -143,6 +143,8 @@ public class MainActivity extends AppCompatActivity {
                 recuperarPartida();
                 return true;
             case R.id.opcMejoresResultados:
+                Intent intent = new Intent(this, MejoresResultados.class);
+                startActivity(intent);
                 return true;
             case R.id.opcAjustes: // @todo Preferencias
                 startActivity(new Intent(this, AjustesActivity.class));
