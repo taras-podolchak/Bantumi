@@ -32,4 +32,8 @@ public class BantumiRepository {
     public void deleteAll() {
         iBantumiDAO.deleteAll();
     }
+
+    public void delete(BantumiEntity bantumi) {
+        iBantumiDAO.delete(bantumi);
+    }
 }

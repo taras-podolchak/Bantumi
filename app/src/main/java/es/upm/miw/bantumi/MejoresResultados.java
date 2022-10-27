@@ -2,6 +2,7 @@ package es.upm.miw.bantumi;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,7 +20,9 @@ public class MejoresResultados extends AppCompatActivity {
 
 
     BantumiViewModel bantumiViewModel;
+    Button botonEliminarItems;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,10 +32,11 @@ public class MejoresResultados extends AppCompatActivity {
         final MyItemRecyclerViewAdapter adapter = new MyItemRecyclerViewAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         bantumiViewModel = new ViewModelProvider(this).get(BantumiViewModel.class);
-
         bantumiViewModel.getAll().observe(this, listBantumiEntity -> adapter.setItems(getTopTen(listBantumiEntity)));
+
+        botonEliminarItems = findViewById(R.id.botonEliminarItems);
+        botonEliminarItems.setOnClickListener(v -> new DeleteAlertDialog().show(getSupportFragmentManager(), "Eliminar registros"));
     }
 
     @SuppressLint("NewApi")

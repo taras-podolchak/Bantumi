@@ -97,4 +97,7 @@ public class BantumiViewModel extends AndroidViewModel {
     public void deleteAll() {
         bantumiRepository.deleteAll();
     }
+    public void delete(BantumiEntity bantumi) {
+        bantumiRepository.delete(bantumi);
+    }
 }

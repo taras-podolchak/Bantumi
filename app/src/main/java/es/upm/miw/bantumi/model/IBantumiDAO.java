@@ -2,6 +2,7 @@ package es.upm.miw.bantumi.model;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -19,4 +20,6 @@ public interface IBantumiDAO {
     @Query("DELETE FROM " + BantumiEntity.TABLA)
     void deleteAll();
 
+    @Delete
+    void delete(BantumiEntity bantumi);
 }
