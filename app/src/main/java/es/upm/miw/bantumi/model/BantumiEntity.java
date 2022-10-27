@@ -66,4 +66,8 @@ public class BantumiEntity {
     public void setFecha(String fecha) {
         this.fecha = fecha;
     }
+
+    public int almacenMasGrande(BantumiEntity bantumi) {
+        return Math.max(Integer.parseInt(bantumi.getNumSemillasAlmacenJugador1()), Integer.parseInt(bantumi.getNumSemillasAlmacenJugador2()));
+    }
 }
